@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نبض المعلمين - تطبيق المعلم</title>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
+    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="logo">
+            <span class="emoji">👨‍🏫</span>
+            <h1>نبض المعلمين</h1>
+        </div>
+        <div class="user-profile">
+            <img src="https://ui-avatars.com/api/?name=Ahmed&background=2E8B57&color=fff" alt="User Avatar" class="avatar">
+            <span>أ. أحمد</span>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Smart Notifications Area -->
+        <section id="notification-area" class="notification-banner hidden">
+            <div class="notification-content">
+                <span class="emoji">🔔</span>
+                <p id="notification-text">استعد.. طاقتك ستغير حياة طلابك الآن</p>
+            </div>
+        </section>
+
+        <!-- Energy Hub (ركن شحن الطاقة) -->
+        <section class="energy-hub">
+            <!-- Mood Input -->
+            <div class="card mood-card">
+                <h2>كيف تشعر الآن؟</h2>
+                <div class="mood-options">
+                    <button class="mood-btn" data-mood="happy">
+                        <span class="emoji">😊</span>
+                        <span>سعيد</span>
+                    </button>
+                    <button class="mood-btn" data-mood="energetic">
+                        <span class="emoji">⚡</span>
+                        <span>مفعم بالطاقة</span>
+                    </button>
+                    <button class="mood-btn" data-mood="calm">
+                        <span class="emoji">😌</span>
+                        <span>هادئ</span>
+                    </button>
+                    <button class="mood-btn" data-mood="tired">
+                        <span class="emoji">😮‍💨</span>
+                        <span>مرهق</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Gratitude Board (بورد الامتنان) -->
+            <div class="card gratitude-card">
+                <h2>بورد الامتنان 🌟</h2>
+                <p>أرسل بطاقة شكر لزميل لتظهر على الشاشة الرئيسية</p>
+                <form id="gratitude-form">
+                    <div class="form-group">
+                        <label for="colleague-select">إلى الزميل:</label>
+                        <select id="colleague-select" required>
+                            <option value="">-- اختر زميلاً --</option>
+                            <option value="أ. محمد (رياضيات)">أ. محمد (رياضيات)</option>
+                            <option value="أ. خالد (لغة عربية)">أ. خالد (لغة عربية)</option>
+                            <option value="أ. سارة (علوم)">أ. سارة (علوم)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="gratitude-message">الرسالة:</label>
+                        <textarea id="gratitude-message" rows="3" placeholder="شكراً لك على..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary w-100">إرسال البطاقة 💌</button>
+                </form>
+            </div>
+
+            <!-- Creativity Forum (منتدى الإبداع) -->
+            <div class="card creativity-card">
+                <h2>منتدى الإبداع 🎨</h2>
+                <p>شاركنا لحظة نجاح أو صورة من حصتك!</p>
+                <form id="creativity-form">
+                    <div class="form-group file-upload">
+                        <label for="photo-upload" class="upload-label">
+                            <span class="emoji" style="font-size: 2rem;">📸</span>
+                            <span>اضغط لرفع صورة</span>
+                        </label>
+                        <input type="file" id="photo-upload" accept="image/*" style="display: none;">
+                    </div>
+                    <div class="form-group">
+                        <textarea id="creativity-story" rows="2" placeholder="اكتب قصة نجاح قصيرة..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary w-100 btn-secondary">مشاركة 🚀</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/firebase-config.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نبض المعلمين - الشاشة التفاعلية</title>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
+    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/screen.css">
+</head>
+<body>
+    <div id="screen-container" class="screen-container">
+        <!-- Header: Weather, Time, and Greeting -->
+        <header class="screen-header">
+            <div class="time-weather">
+                <div class="time" id="current-time">07:30 ص</div>
+                <div class="weather"><span class="emoji">🌤️</span> 24°C</div>
+            </div>
+            <div class="greeting">
+                <h1 id="welcome-msg">صباح الخير، أهلاً بك في بيتك الثاني!</h1>
+            </div>
+            <div class="logo">
+                <span class="emoji">👨‍🏫</span> نبض المعلمين
+            </div>
+        </header>
+
+        <!-- Main Content Area: Cycles -->
+        <main class="screen-main">
+            <!-- Cycle 1: Morning Circle -->
+            <section id="morning-circle" class="cycle-view active">
+                <div class="quote-card glass-card">
+                    <h2>حكمة اليوم 💡</h2>
+                    <p id="daily-quote">"المعلم الناجح هو أهم أعمدة بناء التعليم الناجح."</p>
+                </div>
+            </section>
+
+            <!-- Cycle 2: Break Circle (Shout-outs and Puzzles) -->
+            <section id="break-circle" class="cycle-view">
+                <div class="split-layout">
+                    <!-- Shout-out Scroll -->
+                    <div class="shoutout-container glass-card">
+                        <h2>بورد الامتنان 🌟</h2>
+                        <div class="shoutout-list" id="shoutout-list">
+                            <!-- Dynamically populated from Firebase -->
+                        </div>
+                    </div>
+                    
+                    <!-- Daily Puzzle & Moments -->
+                    <div class="side-content">
+                        <div class="puzzle-card glass-card">
+                            <h2>لغز اليوم 🧩</h2>
+                            <p>شيء كلما أخذت منه كبر.. ما هو؟</p>
+                        </div>
+                        <div class="moments-card glass-card">
+                            <h2>ألبوم اللحظات 📸</h2>
+                            <div class="moment-image" style="background-image: url('https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=500&q=80');"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cycle 3: Quiet Circle (Nature & Breathing) -->
+            <section id="quiet-circle" class="cycle-view">
+                <div class="nature-bg">
+                    <!-- This would ideally be a video, using image for now -->
+                    <div class="breathing-circle">
+                        <span id="breathe-text">تنفس بعمق</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Flash Overlay for New Interactions -->
+        <div id="flash-overlay" class="flash-overlay"></div>
+        
+        <!-- Big Alert Modal for New Gratitude -->
+        <div id="big-alert" class="big-alert hidden">
+            <h1 class="alert-title">رسالة شكر جديدة! 🎉</h1>
+            <div class="alert-body" id="alert-body">
+                من: <span id="alert-sender"></span><br>
+                إلى: <span id="alert-receiver"></span><br>
+                "<span id="alert-message"></span>"
+            </div>
+        </div>
+    </div>
+
+    <script src="js/firebase-config.js"></script>
+    <script src="js/screen.js"></script>
+</body>
+</html>
