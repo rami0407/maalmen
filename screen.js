@@ -73,23 +73,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
         if(window.db) {
+            // Listen for Interactions (Gratitude & Broadcasts)
             window.interactionsRef
-                .where('type', '==', 'gratitude')
                 .orderBy('timestamp', 'asc')
                 .onSnapshot(snapshot => {
                     snapshot.docChanges().forEach(change => {
                         if (change.type === 'added') {
                             const data = change.doc.data();
-                            renderShoutout(data);
                             
-                            // If it's a new interaction (not initial load), trigger big alert
-                            if (!isFirstLoad) {
-                                triggerBigAlert(data);
+                            if (data.type === 'gratitude') {
+                                renderShoutout(data);
+                                // If it's a new interaction (not initial load), trigger big alert
+                                if (!isFirstLoad) {
+                                    triggerBigAlert({
+                                        title: 'رسالة شكر جديدة! 🎉',
+                                        sender: data.sender,
+                                        receiver: data.receiver,
+                                        message: data.message
+                                    });
+                                }
+                            } else if (data.type === 'broadcast') {
+                                if (!isFirstLoad) {
+                                    let emoji = '📢';
+                                    if(data.msgType === 'alert') emoji = '🚨';
+                                    if(data.msgType === 'congrats') emoji = '🎉';
+                                    
+                                    triggerBigAlert({
+                                        title: `${emoji} ${data.title}`,
+                                        sender: 'الإدارة',
+                                        receiver: 'الجميع',
+                                        message: data.message
+                                    });
+                                }
                             }
                         }
                     });
                     isFirstLoad = false;
                 });
+
+            // Listen for Daily Content Updates
+            if(window.dailyContentRef) {
+                window.dailyContentRef.doc('current').onSnapshot(doc => {
+                    if(doc.exists) {
+                        const data = doc.data();
+                        if(data.welcomeMsg) document.getElementById('welcome-msg').innerText = data.welcomeMsg;
+                        if(data.dailyQuote) document.getElementById('daily-quote').innerText = `"${data.dailyQuote}"`;
+                        if(data.puzzleQuestion) document.getElementById('puzzle-question').innerText = data.puzzleQuestion;
+                        if(data.momentImgUrl) {
+                            document.getElementById('moment-img').style.backgroundImage = `url('${data.momentImgUrl}')`;
+                        }
+                    }
+                });
+            }
         }
     } catch (e) {
         console.log("Firebase listener failed, possibly not configured.", e);
@@ -111,9 +146,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Show Modal
         const alertBox = document.getElementById('big-alert');
-        document.getElementById('alert-sender').innerText = data.sender;
-        document.getElementById('alert-receiver').innerText = data.receiver;
-        document.getElementById('alert-message').innerText = data.message;
+        alertBox.querySelector('.alert-title').innerText = data.title || 'إشعار جديد! 🎉';
+        
+        const bodyContent = `
+            من: <span>${data.sender}</span><br>
+            إلى: <span>${data.receiver}</span><br>
+            "<span>${data.message}</span>"
+        `;
+        document.getElementById('alert-body').innerHTML = bodyContent;
         
         alertBox.classList.remove('hidden');
         

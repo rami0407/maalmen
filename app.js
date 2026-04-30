@@ -208,4 +208,30 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => toast.remove(), 500);
         }, 3000);
     }
+
+    // --- Listen for Broadcast Messages ---
+    let isAppFirstLoad = true;
+    try {
+        if(window.db && window.interactionsRef) {
+            window.interactionsRef
+                .orderBy('timestamp', 'asc')
+                .onSnapshot(snapshot => {
+                    snapshot.docChanges().forEach(change => {
+                        if (change.type === 'added') {
+                            const data = change.doc.data();
+                            if (data.type === 'broadcast' && !isAppFirstLoad) {
+                                let emoji = '📢';
+                                if(data.msgType === 'alert') emoji = '🚨';
+                                if(data.msgType === 'congrats') emoji = '🎉';
+                                
+                                showNotification(`${emoji} ${data.title}: ${data.message}`, 15000);
+                            }
+                        }
+                    });
+                    isAppFirstLoad = false;
+                });
+        }
+    } catch(e) {
+        console.log("Could not listen to broadcasts.");
+    }
 });

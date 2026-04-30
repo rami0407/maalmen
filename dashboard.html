@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نبض المعلمين - لوحة التحكم</title>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        body {
+            background-color: var(--color-background);
+            font-family: 'Tajawal', sans-serif;
+            color: var(--color-text-dark);
+        }
+        .dashboard-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: var(--box-shadow);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 10px;
+            font-family: inherit;
+        }
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            background: rgba(46, 139, 87, 0.2);
+            color: var(--color-primary);
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header class="dashboard-header">
+        <span class="emoji" style="font-size: 2rem;">🎛️</span>
+        <h1>لوحة تحكم نبض المعلمين</h1>
+    </header>
+
+    <main class="container">
+        
+        <!-- المحتوى اليومي -->
+        <div class="card full-width">
+            <h2>المحتوى اليومي 📅</h2>
+            <p>سيتم تحديث هذه البيانات تلقائياً على الشاشة التفاعلية الكبيرة.</p>
+            <div class="status-badge" id="sync-status">جاري الاتصال بقاعدة البيانات...</div>
+            
+            <form id="daily-content-form">
+                <div class="form-group">
+                    <label>رسالة الترحيب الصباحية:</label>
+                    <input type="text" id="db-welcome-msg" placeholder="مثال: صباح الخير، أهلاً بك في بيتك الثاني!" required>
+                </div>
+                <div class="form-group">
+                    <label>حكمة اليوم:</label>
+                    <textarea id="db-daily-quote" rows="2" placeholder="أدخل حكمة اليوم..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>لغز اليوم (السؤال):</label>
+                    <input type="text" id="db-puzzle-question" placeholder="مثال: شيء كلما أخذت منه كبر.. ما هو؟" required>
+                </div>
+                <div class="form-group">
+                    <label>رابط صورة ألبوم اللحظات:</label>
+                    <input type="url" id="db-moment-img" placeholder="https://example.com/image.jpg" required>
+                </div>
+                <button type="submit" class="btn-primary">تحديث المحتوى على الشاشات 🔄</button>
+            </form>
+        </div>
+
+        <!-- بث الإشعارات -->
+        <div class="card full-width">
+            <h2>بث إشعار عاجل 📢</h2>
+            <p>سيظهر هذا الإشعار بشكل بارز على الشاشة الكبيرة وفي أجهزة المعلمين.</p>
+            <form id="broadcast-form">
+                <div class="form-group">
+                    <label>عنوان الإشعار:</label>
+                    <input type="text" id="bc-title" placeholder="مثال: تنبيه هام، اجتماع، أو تهنئة" required>
+                </div>
+                <div class="form-group">
+                    <label>نص الإشعار:</label>
+                    <textarea id="bc-message" rows="3" placeholder="أدخل تفاصيل الرسالة هنا..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>نوع الإشعار:</label>
+                    <select id="bc-type" style="width: 100%; padding: 10px; border-radius: 10px;">
+                        <option value="info">معلومة ℹ️</option>
+                        <option value="alert">تنبيه عاجل 🚨</option>
+                        <option value="congrats">تهنئة 🎉</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary btn-danger">إرسال البث الآن 🚀</button>
+            </form>
+        </div>
+
+    </main>
+
+    <script src="firebase-config.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
