@@ -29,31 +29,31 @@
         </header>
 
         <!-- Main Content Area: Unified Grid Layout -->
-        <main class="screen-main" style="flex: 1; padding: 2vh 2vw; box-sizing: border-box; overflow: hidden;">
-            <div class="unified-grid" style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 2vw; height: 100%;">
+        <main class="screen-main" style="flex: 1; padding: 2vh 2vw; box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; min-height: 0;">
+            <div class="unified-grid" style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 2vw; flex: 1; min-height: 0;">
                 
                 <!-- Column 1: Right (Announcements) -->
-                <div class="grid-col right-col" style="display: flex; flex-direction: column; gap: 2vh; height: 100%;">
+                <div class="grid-col right-col" style="display: flex; flex-direction: column; gap: 2vh; min-height: 0;">
                     <!-- Quote of the Day Widget -->
-                    <div class="widget glass-card" style="padding: 2vh 2vw; display: flex; flex-direction: column;">
+                    <div class="widget glass-card" style="padding: 2vh 2vw; display: flex; flex-direction: column; min-height: 0;">
                         <h2 class="widget-title" style="font-size: 1.5rem; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 1vh; margin-bottom: 1.5vh;">حكمة اليوم 🌟</h2>
-                        <blockquote class="daily-quote" id="daily-quote" style="font-size: 1.8rem; line-height: 1.6; margin: 0; flex-grow: 1; display: flex; align-items: center;">"المعلم الناجح هو أهم أعمدة بناء التعليم الناجح."</blockquote>
+                        <blockquote class="daily-quote" id="daily-quote" style="font-size: 1.8rem; line-height: 1.6; margin: 0; flex-grow: 1; display: flex; align-items: center; overflow: hidden;">"المعلم الناجح هو أهم أعمدة بناء التعليم الناجح."</blockquote>
                     </div>
 
                     <!-- Announcements Widget -->
-                    <div class="widget glass-card" style="flex-grow: 1; display: flex; flex-direction: column; padding: 2vh 2vw; overflow: hidden;">
+                    <div class="widget glass-card" style="flex-grow: 1; display: flex; flex-direction: column; padding: 2vh 2vw; overflow: hidden; min-height: 0;">
                         <h2 class="widget-title" style="font-size: 1.5rem; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 1vh; margin-bottom: 1.5vh;">لوح الإعلان 📢</h2>
-                        <div class="shoutout-list" id="shoutout-list" style="flex-grow: 1; overflow-y: auto; padding-right: 1vw;">
+                        <div class="shoutout-list" id="shoutout-list" style="flex-grow: 1; overflow-y: auto; padding-right: 1vw; min-height: 0;">
                             <!-- Dynamically populated from Firebase -->
                         </div>
                     </div>
                 </div>
 
                 <!-- Column 2: Middle (Media Window) -->
-                <div class="grid-col middle-col" style="display: flex; flex-direction: column; height: 100%;">
-                    <div class="widget glass-card media-widget" style="flex-grow: 1; display: flex; flex-direction: column; padding: 2vh 2vw;">
+                <div class="grid-col middle-col" style="display: flex; flex-direction: column; min-height: 0;">
+                    <div class="widget glass-card media-widget" style="flex-grow: 1; display: flex; flex-direction: column; padding: 2vh 2vw; min-height: 0;">
                         <h2 class="widget-title" style="font-size: 1.5rem; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 1vh; margin-bottom: 1.5vh;">نافذة الإبداع 🎬</h2>
-                        <div class="media-container" id="media-container" style="flex-grow: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 1.5vh; position: relative; background: rgba(0,0,0,0.2);">
+                        <div class="media-container" id="media-container" style="flex-grow: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 1.5vh; position: relative; background: rgba(0,0,0,0.2); min-height: 0;">
                             <!-- Image Element -->
                             <img id="daily-image" src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800" alt="لحظة اليوم" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; border-radius: 1.5vh;">
                             <!-- YouTube Element (Hidden by default) -->
@@ -63,17 +63,17 @@
                 </div>
 
                 <!-- Column 3: Left (Puzzle & Dynamic Activities) -->
-                <div class="grid-col left-col" style="display: flex; flex-direction: column; gap: 2vh; height: 100%;">
+                <div class="grid-col left-col" style="display: flex; flex-direction: column; gap: 2vh; min-height: 0;">
                     <!-- Puzzle Widget -->
-                    <div class="widget glass-card" style="padding: 2vh 2vw; display: flex; flex-direction: column;">
+                    <div class="widget glass-card" style="padding: 2vh 2vw; display: flex; flex-direction: column; min-height: 0;">
                         <h2 class="widget-title" style="font-size: 1.5rem; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 1vh; margin-bottom: 1.5vh;">لغز الأسبوع 🧩</h2>
-                        <p id="puzzle-text" style="font-size: 1.6rem; line-height: 1.6; font-weight: bold; margin: 0; flex-grow: 1; display: flex; align-items: center;">شيء كلما زاد نقص.. فما هو؟</p>
+                        <p id="puzzle-text" style="font-size: 1.6rem; line-height: 1.6; font-weight: bold; margin: 0; flex-grow: 1; display: flex; align-items: center; overflow: hidden;">شيء كلما زاد نقص.. فما هو؟</p>
                     </div>
 
                     <!-- Dynamic Activities Widget -->
-                    <div class="widget glass-card dynamic-widget" style="flex-grow: 1; padding: 2vh 2vw; display: flex; flex-direction: column; overflow: hidden;">
+                    <div class="widget glass-card dynamic-widget" style="flex-grow: 1; padding: 2vh 2vw; display: flex; flex-direction: column; overflow: hidden; min-height: 0;">
                         <h2 class="widget-title" style="font-size: 1.5rem; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 1vh; margin-bottom: 1.5vh;">تجديد النشاط 🔄</h2>
-                        <div id="dynamic-activity-container" style="flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative;">
+                        <div id="dynamic-activity-container" style="flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; min-height: 0;">
                             
                             <!-- Activity 1: Breathing -->
                             <div class="activity-item" id="activity-breathing" style="width: 100%; height: 100%;">
