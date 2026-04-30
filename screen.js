@@ -32,15 +32,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const nextCycleId = cycles[currentCycleIndex];
         document.getElementById(nextCycleId).classList.add('active');
 
-        // Audio Logic
+        // Audio Logic & Dynamic Activities
         const breathAudio = document.getElementById('breath-audio');
-        if (breathAudio) {
-            if (nextCycleId === 'quiet-circle') {
-                breathAudio.volume = 0.5; // Set volume to 50%
-                breathAudio.play().catch(e => console.log('Audio auto-play prevented by browser:', e));
-            } else {
+        
+        if (nextCycleId === 'quiet-circle') {
+            // Pick a random activity
+            const activities = ['activity-breathing', 'activity-stretch', 'activity-icebreaker', 'activity-tip'];
+            const randomActivityId = activities[Math.floor(Math.random() * activities.length)];
+            
+            // Hide all activities
+            activities.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.style.display = 'none';
+            });
+            // Show the selected activity
+            const activeActivity = document.getElementById(randomActivityId);
+            if(activeActivity) activeActivity.style.display = 'block';
+
+            // Only play music for relaxing activities
+            if (breathAudio) {
+                if (randomActivityId === 'activity-breathing' || randomActivityId === 'activity-stretch') {
+                    breathAudio.volume = 0.5;
+                    breathAudio.play().catch(e => console.log('Audio auto-play prevented:', e));
+                } else {
+                    breathAudio.pause();
+                    breathAudio.currentTime = 0;
+                }
+            }
+        } else {
+            if (breathAudio) {
                 breathAudio.pause();
-                breathAudio.currentTime = 0; // Reset
+                breathAudio.currentTime = 0;
             }
         }
     }

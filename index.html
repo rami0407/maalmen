@@ -63,13 +63,46 @@
                 </div>
             </section>
 
-            <!-- Cycle 3: Quiet Circle (Nature & Breathing) -->
-            <section id="quiet-circle" class="cycle-view">
-                <div class="nature-bg">
-                    <!-- This would ideally be a video, using image for now -->
-                    <div class="breathing-circle">
-                        <span id="breathe-text">تنفس بعمق</span>
+            <!-- Cycle 3: Dynamic Activities -->
+            <section id="quiet-circle" class="cycle-view" style="display: flex; align-items: center; justify-content: center;">
+                <div id="dynamic-activity-container" class="dynamic-container" style="width: 100%;">
+                    
+                    <!-- Activity 1: Breathing -->
+                    <div class="activity-item" id="activity-breathing">
+                        <div class="nature-bg">
+                            <div class="breathing-circle">
+                                <span id="breathe-text">تنفس بعمق</span>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Activity 2: Stretch -->
+                    <div class="activity-item hidden" id="activity-stretch" style="display: none; padding: 20px;">
+                        <div class="glass-card" style="text-align: center; max-width: 700px; margin: 0 auto;">
+                            <span class="emoji" style="font-size: 5rem; display: block; margin-bottom: 20px;">🧘‍♀️</span>
+                            <h2 style="font-size: 2.5rem; color: var(--color-primary);">تمرين استرخاء سريع!</h2>
+                            <p style="font-size: 1.8rem; margin-top: 20px; line-height: 1.6;">خذ قسطاً من الراحة.. حرّك كتفيك بشكل دائري للخلف 5 مرات لتخفيف التوتر العضلي.</p>
+                        </div>
+                    </div>
+
+                    <!-- Activity 3: Icebreaker -->
+                    <div class="activity-item hidden" id="activity-icebreaker" style="display: none; padding: 20px;">
+                        <div class="glass-card" style="text-align: center; max-width: 700px; margin: 0 auto; border-bottom: 5px solid #FFD700;">
+                            <span class="emoji" style="font-size: 4rem; display: block; margin-bottom: 10px;">☕</span>
+                            <h2 style="font-size: 2.2rem; color: #555;">سؤال للقهوة</h2>
+                            <p id="icebreaker-text" style="font-size: 2rem; font-weight: bold; margin-top: 25px; color: var(--color-text-dark);">لو كان بإمكانك تعليم مادة مختلفة ليوم واحد فقط، ماذا ستختار؟</p>
+                        </div>
+                    </div>
+
+                    <!-- Activity 4: Tip -->
+                    <div class="activity-item hidden" id="activity-tip" style="display: none; padding: 20px;">
+                        <div class="glass-card" style="text-align: center; max-width: 700px; margin: 0 auto; border-bottom: 5px solid #4CAF50;">
+                            <span class="emoji" style="font-size: 4rem; display: block; margin-bottom: 10px;">💡</span>
+                            <h2 style="font-size: 2.2rem; color: #4CAF50;">ومضة تربوية</h2>
+                            <p id="tip-text" style="font-size: 1.8rem; margin-top: 25px; line-height: 1.6;">قاعدة الـ 3 ثوانٍ: انتظر 3 ثوانٍ صامتاً بعد طرح السؤال على الفصل، وستلاحظ أن عدد الأيدي المرفوعة تضاعف!</p>
+                        </div>
+                    </div>
+
                 </div>
                 <!-- Relaxing background music -->
                 <audio id="breath-audio" loop>
