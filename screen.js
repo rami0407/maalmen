@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 // If it's a new interaction (not initial load), trigger big alert
                                 if (!isFirstLoad) {
                                     triggerBigAlert({
-                                        title: 'رسالة شكر جديدة! 🎉',
+                                        title: 'إعلان جديد! 📢',
                                         sender: data.sender,
                                         receiver: data.receiver,
                                         message: data.message

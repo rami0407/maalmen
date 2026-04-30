@@ -159,13 +159,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 window.interactionsRef.add(gratitudeData)
                     .then(() => {
-                        btn.innerText = 'تم الإرسال بنجاح! 🌟';
+                        btn.innerText = 'تم الإرسال بنجاح! 📌';
                         gratitudeForm.reset();
                         setTimeout(() => btn.innerText = originalText, 3000);
                     })
                     .catch(err => {
                         console.error(err);
-                        alert('حدث خطأ أثناء إرسال بطاقة الشكر.');
+                        alert('حدث خطأ أثناء إرسال الإعلان.');
                         btn.innerText = originalText;
                     });
             } else {
