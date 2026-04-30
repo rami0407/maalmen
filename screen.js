@@ -29,7 +29,20 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Show next
         currentCycleIndex = (currentCycleIndex + 1) % cycles.length;
-        document.getElementById(cycles[currentCycleIndex]).classList.add('active');
+        const nextCycleId = cycles[currentCycleIndex];
+        document.getElementById(nextCycleId).classList.add('active');
+
+        // Audio Logic
+        const breathAudio = document.getElementById('breath-audio');
+        if (breathAudio) {
+            if (nextCycleId === 'quiet-circle') {
+                breathAudio.volume = 0.5; // Set volume to 50%
+                breathAudio.play().catch(e => console.log('Audio auto-play prevented by browser:', e));
+            } else {
+                breathAudio.pause();
+                breathAudio.currentTime = 0; // Reset
+            }
+        }
     }
 
     // Switch every 30 seconds for demonstration
