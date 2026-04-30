@@ -28,87 +28,88 @@
             </div>
         </header>
 
-        <!-- Main Content Area: Cycles -->
-        <main class="screen-main">
-            <!-- Cycle 1: Morning Circle -->
-            <section id="morning-circle" class="cycle-view active">
-                <div class="quote-card glass-card">
-                    <h2>حكمة اليوم 💡</h2>
-                    <p id="daily-quote">"المعلم الناجح هو أهم أعمدة بناء التعليم الناجح."</p>
-                </div>
-            </section>
+        <!-- Main Content Area: Unified Grid Layout -->
+        <main class="screen-main" style="height: calc(100vh - 100px); padding: 20px;">
+            <div class="unified-grid" style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 20px; height: 100%;">
+                
+                <!-- Column 1: Right (Announcements) -->
+                <div class="grid-col right-col" style="display: flex; flex-direction: column; gap: 20px;">
+                    <!-- Quote of the Day Widget -->
+                    <div class="widget glass-card" style="padding: 20px;">
+                        <h2 class="widget-title" style="font-size: 1.5rem; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 15px;">حكمة اليوم 🌟</h2>
+                        <blockquote class="daily-quote" id="daily-quote" style="font-size: 1.8rem; line-height: 1.6; margin: 0;">"المعلم الناجح هو أهم أعمدة بناء التعليم الناجح."</blockquote>
+                    </div>
 
-            <!-- Cycle 2: Break Circle (Shout-outs and Puzzles) -->
-            <section id="break-circle" class="cycle-view">
-                <div class="split-layout">
-                    <!-- Shout-out Scroll -->
-                    <div class="shoutout-container glass-card">
-                        <h2>لوح الإعلان 📢</h2>
-                        <div class="shoutout-list" id="shoutout-list">
+                    <!-- Announcements Widget -->
+                    <div class="widget glass-card" style="flex-grow: 1; display: flex; flex-direction: column; padding: 20px; overflow: hidden;">
+                        <h2 class="widget-title" style="font-size: 1.5rem; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 15px;">لوح الإعلان 📢</h2>
+                        <div class="shoutout-list" id="shoutout-list" style="flex-grow: 1; overflow-y: auto; padding-right: 10px;">
                             <!-- Dynamically populated from Firebase -->
                         </div>
                     </div>
-                    
-                    <!-- Daily Puzzle & Moments -->
-                    <div class="side-content">
-                        <div class="puzzle-card glass-card">
-                            <h2>لغز اليوم 🧩</h2>
-                            <p id="puzzle-question">شيء كلما أخذت منه كبر.. ما هو؟</p>
-                        </div>
-                        <div class="moments-card glass-card">
-                            <h2>ألبوم اللحظات 📸</h2>
-                            <div id="moment-img" class="moment-image" style="background-image: url('https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=500&q=80');"></div>
+                </div>
+
+                <!-- Column 2: Middle (Media Window) -->
+                <div class="grid-col middle-col" style="display: flex; flex-direction: column; gap: 20px;">
+                    <div class="widget glass-card media-widget" style="flex-grow: 1; display: flex; flex-direction: column; padding: 20px;">
+                        <h2 class="widget-title" style="font-size: 1.5rem; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 15px;">نافذة الإبداع 🎬</h2>
+                        <div class="media-container" id="media-container" style="flex-grow: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 15px; position: relative; background: rgba(0,0,0,0.2);">
+                            <!-- Image Element -->
+                            <img id="daily-image" src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800" alt="لحظة اليوم" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; border-radius: 15px;">
+                            <!-- YouTube Element (Hidden by default) -->
+                            <iframe id="youtube-player" style="display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; border-radius: 15px;" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- Cycle 3: Dynamic Activities -->
-            <section id="quiet-circle" class="cycle-view" style="display: flex; align-items: center; justify-content: center;">
-                <div id="dynamic-activity-container" class="dynamic-container" style="width: 100%;">
-                    
-                    <!-- Activity 1: Breathing -->
-                    <div class="activity-item" id="activity-breathing">
-                        <div class="nature-bg">
-                            <div class="breathing-circle">
-                                <span id="breathe-text">تنفس بعمق</span>
+                <!-- Column 3: Left (Puzzle & Dynamic Activities) -->
+                <div class="grid-col left-col" style="display: flex; flex-direction: column; gap: 20px;">
+                    <!-- Puzzle Widget -->
+                    <div class="widget glass-card" style="padding: 20px;">
+                        <h2 class="widget-title" style="font-size: 1.5rem; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 15px;">لغز الأسبوع 🧩</h2>
+                        <p id="puzzle-text" style="font-size: 1.6rem; line-height: 1.6; font-weight: bold; margin: 0;">شيء كلما زاد نقص.. فما هو؟</p>
+                    </div>
+
+                    <!-- Dynamic Activities Widget -->
+                    <div class="widget glass-card dynamic-widget" style="flex-grow: 1; padding: 20px; display: flex; flex-direction: column;">
+                        <h2 class="widget-title" style="font-size: 1.5rem; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 15px;">تجديد النشاط 🔄</h2>
+                        <div id="dynamic-activity-container" style="flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative;">
+                            
+                            <!-- Activity 1: Breathing -->
+                            <div class="activity-item" id="activity-breathing" style="width: 100%; height: 100%;">
+                                <div class="nature-bg" style="height: 100%; border-radius: 15px; display: flex; align-items: center; justify-content: center; background: url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=600') no-repeat center center; background-size: cover;">
+                                    <div class="breathing-circle" style="width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.3); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; animation: breathe 8s infinite ease-in-out;">
+                                        <span id="breathe-text" style="font-size: 1.5rem; color: white; font-weight: bold;">تنفس</span>
+                                    </div>
+                                </div>
                             </div>
+
+                            <!-- Activity 2: Stretch -->
+                            <div class="activity-item hidden" id="activity-stretch" style="display: none; text-align: center;">
+                                <span class="emoji" style="font-size: 4rem; display: block; margin-bottom: 15px;">🧘‍♀️</span>
+                                <h3 style="font-size: 1.8rem; color: var(--color-primary); margin-bottom: 10px;">استرخاء سريع!</h3>
+                                <p style="font-size: 1.4rem; line-height: 1.6;">حرّك كتفيك بشكل دائري للخلف 5 مرات لتخفيف التوتر العضلي.</p>
+                            </div>
+
+                            <!-- Activity 3: Icebreaker -->
+                            <div class="activity-item hidden" id="activity-icebreaker" style="display: none; text-align: center;">
+                                <span class="emoji" style="font-size: 4rem; display: block; margin-bottom: 10px;">☕</span>
+                                <h3 style="font-size: 1.8rem; color: #555; margin-bottom: 10px;">سؤال للقهوة</h3>
+                                <p style="font-size: 1.4rem; font-weight: bold; line-height: 1.6;">لو كان بإمكانك تعليم مادة مختلفة ليوم واحد، ماذا ستختار؟</p>
+                            </div>
+
+                            <!-- Activity 4: Tip -->
+                            <div class="activity-item hidden" id="activity-tip" style="display: none; text-align: center;">
+                                <span class="emoji" style="font-size: 4rem; display: block; margin-bottom: 10px;">💡</span>
+                                <h3 style="font-size: 1.8rem; color: #4CAF50; margin-bottom: 10px;">ومضة تربوية</h3>
+                                <p style="font-size: 1.4rem; line-height: 1.6;">قاعدة الـ 3 ثوانٍ: انتظر 3 ثوانٍ صامتاً بعد طرح السؤال على الفصل!</p>
+                            </div>
+
                         </div>
                     </div>
-
-                    <!-- Activity 2: Stretch -->
-                    <div class="activity-item hidden" id="activity-stretch" style="display: none; padding: 20px;">
-                        <div class="glass-card" style="text-align: center; max-width: 700px; margin: 0 auto;">
-                            <span class="emoji" style="font-size: 5rem; display: block; margin-bottom: 20px;">🧘‍♀️</span>
-                            <h2 style="font-size: 2.5rem; color: var(--color-primary);">تمرين استرخاء سريع!</h2>
-                            <p style="font-size: 1.8rem; margin-top: 20px; line-height: 1.6;">خذ قسطاً من الراحة.. حرّك كتفيك بشكل دائري للخلف 5 مرات لتخفيف التوتر العضلي.</p>
-                        </div>
-                    </div>
-
-                    <!-- Activity 3: Icebreaker -->
-                    <div class="activity-item hidden" id="activity-icebreaker" style="display: none; padding: 20px;">
-                        <div class="glass-card" style="text-align: center; max-width: 700px; margin: 0 auto; border-bottom: 5px solid #FFD700;">
-                            <span class="emoji" style="font-size: 4rem; display: block; margin-bottom: 10px;">☕</span>
-                            <h2 style="font-size: 2.2rem; color: #555;">سؤال للقهوة</h2>
-                            <p id="icebreaker-text" style="font-size: 2rem; font-weight: bold; margin-top: 25px; color: var(--color-text-dark);">لو كان بإمكانك تعليم مادة مختلفة ليوم واحد فقط، ماذا ستختار؟</p>
-                        </div>
-                    </div>
-
-                    <!-- Activity 4: Tip -->
-                    <div class="activity-item hidden" id="activity-tip" style="display: none; padding: 20px;">
-                        <div class="glass-card" style="text-align: center; max-width: 700px; margin: 0 auto; border-bottom: 5px solid #4CAF50;">
-                            <span class="emoji" style="font-size: 4rem; display: block; margin-bottom: 10px;">💡</span>
-                            <h2 style="font-size: 2.2rem; color: #4CAF50;">ومضة تربوية</h2>
-                            <p id="tip-text" style="font-size: 1.8rem; margin-top: 25px; line-height: 1.6;">قاعدة الـ 3 ثوانٍ: انتظر 3 ثوانٍ صامتاً بعد طرح السؤال على الفصل، وستلاحظ أن عدد الأيدي المرفوعة تضاعف!</p>
-                        </div>
-                    </div>
-
                 </div>
-                <!-- Relaxing background music -->
-                <audio id="breath-audio" loop>
-                    <source src="https://upload.wikimedia.org/wikipedia/commons/9/90/River_stream_with_bird_song_-_nature_sounds.ogg" type="audio/ogg">
-                </audio>
-            </section>
+
+            </div>
         </main>
         
         <!-- Flash Overlay for New Interactions -->

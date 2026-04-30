@@ -156,6 +156,10 @@
                     <label>رابط صورة ألبوم اللحظات:</label>
                     <input type="url" id="db-moment-img" placeholder="https://example.com/image.jpg" required>
                 </div>
+                <div class="form-group">
+                    <label>رابط فيديو يوتيوب (اختياري - سيحل محل الصورة):</label>
+                    <input type="url" id="db-youtube" placeholder="https://www.youtube.com/watch?v=...">
+                </div>
                 <button type="submit" class="btn-primary">تحديث المحتوى على الشاشات 🔄</button>
             </form>
         </div>
@@ -175,6 +179,15 @@
                 </div>
                 <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #f12711, #f5af19);">إرسال الإعلان 📌</button>
             </form>
+        </div>
+
+        <!-- إدارة الإعلانات -->
+        <div class="card full-width">
+            <h2>إدارة الإعلانات الحالية 🗑️</h2>
+            <p>قائمة الإعلانات التي تظهر حالياً على الشاشة. يمكنك مسح أي إعلان من هنا.</p>
+            <div id="announcement-manage-list" style="max-height: 300px; overflow-y: auto; margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+                <p>جاري تحميل الإعلانات...</p>
+            </div>
         </div>
 
         <!-- بث الإشعارات -->

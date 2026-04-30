@@ -17,107 +17,84 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateClock, 1000);
     updateClock();
 
-    // --- Cycle Management ---
-    const cycles = ['morning-circle', 'break-circle', 'quiet-circle'];
-    let currentCycleIndex = 1; // Start with break circle for demo purposes
+    // --- Dynamic Activities Management ---
+    const activities = ['activity-breathing', 'activity-stretch', 'activity-icebreaker', 'activity-tip'];
+    let currentActivityIndex = 0;
 
-    function switchCycle() {
-        // Hide all
-        cycles.forEach(id => {
-            document.getElementById(id).classList.remove('active');
-        });
-        
+    function switchDynamicActivity() {
+        const currentId = activities[currentActivityIndex];
+        const nextActivityIndex = (currentActivityIndex + 1) % activities.length;
+        const nextId = activities[nextActivityIndex];
+
+        // Hide current
+        const currEl = document.getElementById(currentId);
+        if(currEl) currEl.style.display = 'none';
+
         // Show next
-        currentCycleIndex = (currentCycleIndex + 1) % cycles.length;
-        const nextCycleId = cycles[currentCycleIndex];
-        document.getElementById(nextCycleId).classList.add('active');
+        const nextEl = document.getElementById(nextId);
+        if(nextEl) nextEl.style.display = 'block';
 
-        // Audio Logic & Dynamic Activities
+        currentActivityIndex = nextActivityIndex;
+
+        // Audio Logic
         const breathAudio = document.getElementById('breath-audio');
-        
-        if (nextCycleId === 'quiet-circle') {
-            // Pick a random activity
-            const activities = ['activity-breathing', 'activity-stretch', 'activity-icebreaker', 'activity-tip'];
-            const randomActivityId = activities[Math.floor(Math.random() * activities.length)];
-            
-            // Hide all activities
-            activities.forEach(id => {
-                const el = document.getElementById(id);
-                if(el) el.style.display = 'none';
-            });
-            // Show the selected activity
-            const activeActivity = document.getElementById(randomActivityId);
-            if(activeActivity) activeActivity.style.display = 'block';
-
-            // Only play music for relaxing activities
-            if (breathAudio) {
-                if (randomActivityId === 'activity-breathing' || randomActivityId === 'activity-stretch') {
-                    breathAudio.volume = 0.5;
-                    breathAudio.play().catch(e => console.log('Audio auto-play prevented:', e));
-                } else {
-                    breathAudio.pause();
-                    breathAudio.currentTime = 0;
-                }
-            }
-        } else {
-            if (breathAudio) {
+        if (breathAudio) {
+            if (nextId === 'activity-breathing' || nextId === 'activity-stretch') {
+                breathAudio.volume = 0.5;
+                breathAudio.play().catch(e => console.log('Audio auto-play prevented:', e));
+            } else {
                 breathAudio.pause();
                 breathAudio.currentTime = 0;
             }
         }
     }
 
-    // Switch every 30 seconds for demonstration
-    setInterval(switchCycle, 15000); // 15 seconds to see cycles faster in demo
+    // Switch dynamic activity every 30 seconds
+    setInterval(switchDynamicActivity, 30000);
 
-    // Breathing Text Logic for Quiet Circle
+    // Breathing Text Logic
     const breatheText = document.getElementById('breathe-text');
-    setInterval(() => {
-        if(breatheText.innerText === 'تنفس بعمق') {
-            breatheText.innerText = 'احتفظ به';
-            setTimeout(() => {
-                breatheText.innerText = 'زفير ببطء';
-            }, 2000);
-        } else {
-            breatheText.innerText = 'تنفس بعمق';
-        }
-    }, 8000); // syncs with css animation 8s
-
-
-    // --- Firebase Real-time Listeners ---
-    
-    // Dummy Data for Shoutouts if Firebase is not connected
-    const dummyShoutouts = [
-        { sender: 'أ. خالد', receiver: 'أ. محمد', message: 'شكراً لمساعدتك في شرح درس اليوم!' },
-        { sender: 'الإدارة', receiver: 'الجميع', message: 'جهودكم مقدرة، نتمنى لكم يوماً سعيداً.' }
-    ];
-
-    const shoutoutList = document.getElementById('shoutout-list');
-
-    function renderShoutout(data) {
-        const div = document.createElement('div');
-        div.className = 'shoutout-item';
-        div.innerHTML = `<strong>من ${data.sender} إلى ${data.receiver}:</strong> <br> "${data.message}"`;
-        shoutoutList.appendChild(div);
+    if (breatheText) {
+        setInterval(() => {
+            if(breatheText.innerText === 'تنفس') {
+                breatheText.innerText = 'احتفظ به';
+                setTimeout(() => {
+                    breatheText.innerText = 'زفير ببطء';
+                }, 2000);
+            } else {
+                breatheText.innerText = 'تنفس';
+            }
+        }, 8000); // syncs with css animation 8s
     }
 
-    // Initial render dummy
-    dummyShoutouts.forEach(renderShoutout);
+    // --- Firebase Real-time Listeners ---
+    const shoutoutList = document.getElementById('shoutout-list');
+
+    function renderShoutout(docId, data) {
+        const div = document.createElement('div');
+        div.className = 'shoutout-item';
+        div.setAttribute('data-id', docId);
+        div.innerHTML = `<strong>إلى: ${data.receiver}</strong> <br> <span style="font-size:1.1rem; color:var(--color-text-dark);">${data.message}</span>`;
+        if (shoutoutList) {
+            shoutoutList.appendChild(div);
+        }
+    }
 
     let isFirstLoad = true;
 
     try {
         if(window.db) {
-            // Listen for Interactions (Gratitude & Broadcasts)
+            // Listen for Interactions (Announcements & Broadcasts)
             window.interactionsRef
                 .orderBy('timestamp', 'asc')
                 .onSnapshot(snapshot => {
                     snapshot.docChanges().forEach(change => {
+                        const docId = change.doc.id;
+                        const data = change.doc.data();
+
                         if (change.type === 'added') {
-                            const data = change.doc.data();
-                            
                             if (data.type === 'gratitude') {
-                                renderShoutout(data);
+                                renderShoutout(docId, data);
                                 // If it's a new interaction (not initial load), trigger big alert
                                 if (!isFirstLoad) {
                                     triggerBigAlert({
@@ -141,8 +118,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                     });
                                 }
                             }
+                        } else if (change.type === 'removed') {
+                            const itemToRemove = document.querySelector(`.shoutout-item[data-id="${docId}"]`);
+                            if(itemToRemove) itemToRemove.remove();
                         }
                     });
+                    
+                    // Auto-scroll to bottom of shoutout list on new additions
+                    if (shoutoutList) {
+                        shoutoutList.scrollTop = shoutoutList.scrollHeight;
+                    }
+
                     isFirstLoad = false;
                 });
 
@@ -151,11 +137,51 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.dailyContentRef.doc('current').onSnapshot(doc => {
                     if(doc.exists) {
                         const data = doc.data();
-                        if(data.welcomeMsg) document.getElementById('welcome-msg').innerText = data.welcomeMsg;
-                        if(data.dailyQuote) document.getElementById('daily-quote').innerText = `"${data.dailyQuote}"`;
-                        if(data.puzzleQuestion) document.getElementById('puzzle-question').innerText = data.puzzleQuestion;
-                        if(data.momentImgUrl) {
-                            document.getElementById('moment-img').style.backgroundImage = `url('${data.momentImgUrl}')`;
+                        if(data.welcomeMsg) {
+                            const welcomeEl = document.getElementById('welcome-msg');
+                            if(welcomeEl) welcomeEl.innerText = data.welcomeMsg;
+                        }
+                        if(data.dailyQuote) {
+                            const quoteEl = document.getElementById('daily-quote');
+                            if(quoteEl) quoteEl.innerText = `"${data.dailyQuote}"`;
+                        }
+                        if(data.puzzleQuestion) {
+                            const puzzleEl = document.getElementById('puzzle-text');
+                            if(puzzleEl) puzzleEl.innerText = data.puzzleQuestion;
+                        }
+                        
+                        const imgEl = document.getElementById('daily-image');
+                        const ytEl = document.getElementById('youtube-player');
+                        
+                        if(data.youtubeUrl && data.youtubeUrl.trim() !== '') {
+                            // Extract video ID and construct embed URL
+                            let videoId = '';
+                            try {
+                                if(data.youtubeUrl.includes('v=')) {
+                                    videoId = data.youtubeUrl.split('v=')[1].split('&')[0];
+                                } else if(data.youtubeUrl.includes('youtu.be/')) {
+                                    videoId = data.youtubeUrl.split('youtu.be/')[1].split('?')[0];
+                                } else {
+                                    videoId = data.youtubeUrl; // fallback
+                                }
+                            } catch(e) {}
+                            
+                            if(imgEl) imgEl.style.display = 'none';
+                            if(ytEl) {
+                                ytEl.style.display = 'block';
+                                ytEl.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}`;
+                            }
+                        } else {
+                            if(ytEl) {
+                                ytEl.style.display = 'none';
+                                ytEl.src = '';
+                            }
+                            if(imgEl) {
+                                imgEl.style.display = 'block';
+                                if(data.momentImgUrl) {
+                                    imgEl.src = data.momentImgUrl;
+                                }
+                            }
                         }
                     }
                 });
@@ -163,38 +189,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     } catch (e) {
         console.log("Firebase listener failed, possibly not configured.", e);
-        // Expose function for manual testing
-        window.simulateNewGratitude = function(messageText) {
-            triggerBigAlert({
-                sender: 'أ. سارة',
-                receiver: 'أ. هدى',
-                message: messageText || 'شكراً على فنجان القهوة الرائع!'
-            });
-        };
     }
 
     function triggerBigAlert(data) {
         // Flash screen
         const overlay = document.getElementById('flash-overlay');
-        overlay.classList.add('flash-active');
-        setTimeout(() => overlay.classList.remove('flash-active'), 2000);
+        if(overlay) {
+            overlay.classList.add('flash-active');
+            setTimeout(() => overlay.classList.remove('flash-active'), 2000);
+        }
 
         // Show Modal
         const alertBox = document.getElementById('big-alert');
-        alertBox.querySelector('.alert-title').innerText = data.title || 'إشعار جديد! 🎉';
-        
-        const bodyContent = `
-            من: <span>${data.sender}</span><br>
-            إلى: <span>${data.receiver}</span><br>
-            "<span>${data.message}</span>"
-        `;
-        document.getElementById('alert-body').innerHTML = bodyContent;
-        
-        alertBox.classList.remove('hidden');
-        
-        // Hide after 10 seconds
-        setTimeout(() => {
-            alertBox.classList.add('hidden');
-        }, 10000);
+        if(alertBox) {
+            alertBox.querySelector('.alert-title').innerText = data.title || 'إشعار جديد! 🎉';
+            
+            const bodyContent = `
+                من: <span>${data.sender}</span><br>
+                إلى: <span>${data.receiver}</span><br>
+                "<span>${data.message}</span>"
+            `;
+            document.getElementById('alert-body').innerHTML = bodyContent;
+            
+            alertBox.classList.remove('hidden');
+            
+            // Hide after 10 seconds
+            setTimeout(() => {
+                alertBox.classList.add('hidden');
+            }, 10000);
+        }
     }
 });

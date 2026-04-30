@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputQuote = document.getElementById('db-daily-quote');
     const inputPuzzle = document.getElementById('db-puzzle-question');
     const inputMomentImg = document.getElementById('db-moment-img');
+    const inputYoutube = document.getElementById('db-youtube');
 
     let isDbConnected = false;
 
@@ -55,10 +56,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     inputQuote.value = data.dailyQuote || '';
                     inputPuzzle.value = data.puzzleQuestion || '';
                     inputMomentImg.value = data.momentImgUrl || '';
+                    if(inputYoutube) inputYoutube.value = data.youtubeUrl || '';
                 }
             }).catch(err => {
                 console.error("Error loading data:", err);
             });
+            
+            // Load Announcements
+            loadAnnouncements();
         }
     } catch(e) {
         syncStatus.innerText = 'غير متصل (محلي فقط) ❌';
@@ -75,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
             dailyQuote: inputQuote.value,
             puzzleQuestion: inputPuzzle.value,
             momentImgUrl: inputMomentImg.value,
+            youtubeUrl: inputYoutube ? inputYoutube.value : '',
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         };
 
@@ -173,4 +179,48 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // --- Manage Announcements Logic ---
+    function loadAnnouncements() {
+        if(!isDbConnected || !window.interactionsRef) return;
+        
+        window.interactionsRef.orderBy('timestamp', 'desc')
+            .onSnapshot(snapshot => {
+                const list = document.getElementById('announcement-manage-list');
+                if(!list) return;
+                
+                list.innerHTML = '';
+                let hasAnnouncements = false;
+                
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if(data.type === 'gratitude') {
+                        hasAnnouncements = true;
+                        const item = document.createElement('div');
+                        item.style.cssText = 'display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 5px;';
+                        
+                        item.innerHTML = `
+                            <div style="flex-grow: 1;">
+                                <strong>موجّه إلى:</strong> ${data.receiver} <br>
+                                <span style="font-size: 0.9rem; color: #555;">${data.message}</span>
+                            </div>
+                            <button class="btn-danger" style="color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; background: #ff416c;" onclick="deleteAnnouncement('${doc.id}')">مسح 🗑️</button>
+                        `;
+                        list.appendChild(item);
+                    }
+                });
+                
+                if(!hasAnnouncements) {
+                    list.innerHTML = '<p>لا توجد إعلانات نشطة حالياً.</p>';
+                }
+            });
+    }
+
+    // Expose delete function to global scope
+    window.deleteAnnouncement = function(docId) {
+        if(confirm('هل أنت متأكد من مسح هذا الإعلان؟')) {
+            window.interactionsRef.doc(docId).delete()
+                .catch(err => alert('حدث خطأ أثناء المسح.'));
+        }
+    };
 });
