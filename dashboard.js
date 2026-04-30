@@ -1,5 +1,32 @@
 // dashboard.js
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Authentication Logic ---
+    const loginOverlay = document.getElementById('login-overlay');
+    const dashboardContent = document.getElementById('dashboard-content');
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+
+    // Check if already logged in
+    if(sessionStorage.getItem('maalmen_admin_auth') === 'true') {
+        loginOverlay.style.display = 'none';
+        dashboardContent.style.display = 'block';
+    }
+
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const user = document.getElementById('login-username').value;
+        const pass = document.getElementById('login-password').value;
+
+        if(user === 'musherfe' && pass === '318212') {
+            sessionStorage.setItem('maalmen_admin_auth', 'true');
+            loginOverlay.style.display = 'none';
+            dashboardContent.style.display = 'block';
+        } else {
+            loginError.style.display = 'block';
+        }
+    });
+
+    // --- Dashboard Logic ---
     const syncStatus = document.getElementById('sync-status');
     const contentForm = document.getElementById('daily-content-form');
     const broadcastForm = document.getElementById('broadcast-form');

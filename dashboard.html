@@ -82,10 +82,51 @@
             color: var(--color-primary);
             margin-bottom: 10px;
         }
+        /* Login Overlay */
+        #login-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--color-background);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--box-shadow);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .login-card h2 { margin-bottom: 20px; color: var(--color-primary); }
     </style>
 </head>
 <body>
-    <header class="dashboard-header">
+    <!-- Login Overlay -->
+    <div id="login-overlay">
+        <div class="login-card">
+            <span class="emoji" style="font-size: 3rem; display: block; margin-bottom: 15px;">🔒</span>
+            <h2>تسجيل الدخول للوحة التحكم</h2>
+            <form id="login-form">
+                <div class="form-group" style="text-align: right;">
+                    <label>اسم المستخدم:</label>
+                    <input type="text" id="login-username" required>
+                </div>
+                <div class="form-group" style="text-align: right;">
+                    <label>كلمة المرور:</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <p id="login-error" style="color: red; display: none; font-size: 0.9rem;">بيانات الدخول غير صحيحة</p>
+                <button type="submit" class="btn-primary" style="margin-top: 15px;">دخول</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="dashboard-content" style="display: none;">
+        <header class="dashboard-header">
         <span class="emoji" style="font-size: 2rem;">🎛️</span>
         <h1>لوحة تحكم نبض المعلمين</h1>
     </header>
@@ -144,7 +185,7 @@
             </form>
         </div>
 
-    </main>
+    </div>
 
     <script src="firebase-config.js"></script>
     <script src="dashboard.js"></script>
