@@ -36,45 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- Gratitude Board Logic ---
-    const gratitudeForm = document.getElementById('gratitude-form');
-    gratitudeForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const receiver = document.getElementById('colleague-select').value;
-        const message = document.getElementById('gratitude-message').value;
-        
-        const interactionData = {
-            type: 'gratitude',
-            sender: currentUser.name,
-            receiver: receiver,
-            message: message,
-            timestamp: new Date().getTime(), // timestamp for easy sorting
-        };
-
-        // Save to Firebase (this will trigger the big screen listener)
-        try {
-            if(window.db) {
-                // We use add to create a new document in the interactions collection
-                window.interactionsRef.add(interactionData)
-                    .then(() => {
-                        gratitudeForm.reset();
-                        showToast('تم إرسال بطاقة الشكر! ستظهر على الشاشة قريباً 🌟');
-                    })
-                    .catch(error => {
-                        console.error("Error adding document: ", error);
-                        showToast('حدث خطأ أثناء الإرسال.');
-                    });
-            } else {
-                // Dummy fallback
-                console.log("Mock saved:", interactionData);
-                gratitudeForm.reset();
-                showToast('تم إرسال بطاقة الشكر! (محلي)');
-            }
-        } catch (e) {
-             console.log("Database not connected yet.");
-        }
-    });
 
     // --- Creativity Forum Logic ---
     const creativityForm = document.getElementById('creativity-form');

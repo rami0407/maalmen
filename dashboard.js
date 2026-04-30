@@ -134,4 +134,43 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('قاعدة البيانات غير متصلة.');
         }
     });
+
+    // Handle Gratitude Board (From Admin)
+    const gratitudeForm = document.getElementById('dashboard-gratitude-form');
+    if (gratitudeForm) {
+        gratitudeForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const receiver = document.getElementById('db-gratitude-receiver').value;
+            const message = document.getElementById('db-gratitude-message').value;
+
+            const gratitudeData = {
+                type: 'gratitude',
+                sender: 'إدارة المدرسة',
+                receiver: receiver,
+                message: message,
+                timestamp: new Date().getTime(),
+            };
+
+            if(isDbConnected && window.interactionsRef) {
+                const btn = gratitudeForm.querySelector('button');
+                const originalText = btn.innerText;
+                btn.innerText = 'جاري الإرسال...';
+
+                window.interactionsRef.add(gratitudeData)
+                    .then(() => {
+                        btn.innerText = 'تم الإرسال بنجاح! 🌟';
+                        gratitudeForm.reset();
+                        setTimeout(() => btn.innerText = originalText, 3000);
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert('حدث خطأ أثناء إرسال بطاقة الشكر.');
+                        btn.innerText = originalText;
+                    });
+            } else {
+                alert('قاعدة البيانات غير متصلة.');
+            }
+        });
+    }
 });
