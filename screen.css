@@ -1,4 +1,9 @@
 /* css/screen.css */
+/* Responsive Typography Scaling for 16:9 TV Screens */
+html {
+    font-size: 0.9vw; /* Scales root em based on screen width. Approx 17px on 1080p, 34px on 4K */
+}
+
 body {
     overflow: hidden; /* It's a big screen, no scrolling */
     background: url('https://images.unsplash.com/photo-1614850715649-1d0106293cb1?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
@@ -16,7 +21,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 30px 50px;
+    padding: 3vh 3vw;
     background: rgba(255, 255, 255, 0.9);
     box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 }
