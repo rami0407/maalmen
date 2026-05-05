@@ -90,45 +90,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 8000); // syncs with css animation 8s
     }
 
-    // --- Auto-scroll shoutout list (continuous, no user interaction needed) ---
-    const shoutoutList = document.getElementById('shoutout-list');
+    // --- Generic continuous auto-scroller (works for any element) ---
+    function createAutoScroller(el, speed, pauseMs) {
+        if (!el) return;
+        let pos = 0;
+        let paused = false;
 
-    let scrollPos = 0;
-    let scrollPaused = false;
-    const SCROLL_SPEED = 0.6; // px per frame (~36px/sec at 60fps)
-    const PAUSE_AT_TOP_MS = 2000; // pause 2s after resetting to top
-
-    function autoScrollLoop() {
-        if (!shoutoutList) return;
-
-        const maxScroll = shoutoutList.scrollHeight - shoutoutList.clientHeight;
-
-        if (maxScroll <= 0) {
-            // Not enough content to scroll yet — check again next frame
-            requestAnimationFrame(autoScrollLoop);
-            return;
-        }
-
-        if (!scrollPaused) {
-            scrollPos += SCROLL_SPEED;
-
-            if (scrollPos >= maxScroll) {
-                // Reached the bottom — jump back to top and pause briefly
-                scrollPos = 0;
-                shoutoutList.scrollTop = 0;
-                scrollPaused = true;
-                setTimeout(() => {
-                    scrollPaused = false;
-                }, PAUSE_AT_TOP_MS);
-            } else {
-                shoutoutList.scrollTop = scrollPos;
+        function loop() {
+            const max = el.scrollHeight - el.clientHeight;
+            if (max > 0 && !paused) {
+                pos += speed;
+                if (pos >= max) {
+                    pos = 0;
+                    el.scrollTop = 0;
+                    paused = true;
+                    setTimeout(() => { paused = false; }, pauseMs);
+                } else {
+                    el.scrollTop = pos;
+                }
             }
+            requestAnimationFrame(loop);
         }
-
-        requestAnimationFrame(autoScrollLoop);
+        requestAnimationFrame(loop);
     }
 
-    requestAnimationFrame(autoScrollLoop);
+    // Auto-scroll the announcements list (slow, looping)
+    const shoutoutList = document.getElementById('shoutout-list');
+    createAutoScroller(shoutoutList, 0.5, 2500);
+
+    // Auto-scroll the quote if it's too long to fit (slower)
+    const quoteEl = document.getElementById('daily-quote');
+    createAutoScroller(quoteEl, 0.3, 3000);
 
     // --- Firebase Real-time Listeners ---
 
