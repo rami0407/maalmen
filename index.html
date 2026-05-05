@@ -73,39 +73,9 @@
 
                     <!-- Dynamic Activities Widget -->
                     <div class="widget glass-card dynamic-widget" style="flex-grow: 1; padding: 2vh 2vw; display: flex; flex-direction: column; overflow: hidden; min-height: 0;">
-                        <h2 class="widget-title" style="font-size: 1.5rem; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 1vh; margin-bottom: 1.5vh;">تجديد النشاط 🔄</h2>
-                        <div id="dynamic-activity-container" style="flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; min-height: 0;">
-                            
-                            <!-- Activity 1: Breathing -->
-                            <div class="activity-item" id="activity-breathing" style="width: 100%; height: 100%;">
-                                <div class="nature-bg" style="height: 100%; border-radius: 1.5vh; display: flex; align-items: center; justify-content: center; background: url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=600') no-repeat center center; background-size: cover;">
-                                    <div class="breathing-circle" style="width: 15vh; height: 15vh; border-radius: 50%; background: rgba(255,255,255,0.3); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; animation: breathe 8s infinite ease-in-out;">
-                                        <span id="breathe-text" style="font-size: 1.5rem; color: white; font-weight: bold;">تنفس</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Activity 2: Stretch -->
-                            <div class="activity-item hidden" id="activity-stretch" style="display: none; text-align: center;">
-                                <span class="emoji" style="font-size: 4rem; display: block; margin-bottom: 1.5vh;">🧘‍♀️</span>
-                                <h3 style="font-size: 1.8rem; color: var(--color-primary); margin-bottom: 1vh;">استرخاء سريع!</h3>
-                                <p style="font-size: 1.4rem; line-height: 1.6;">حرّك كتفيك بشكل دائري للخلف 5 مرات لتخفيف التوتر العضلي.</p>
-                            </div>
-
-                            <!-- Activity 3: Icebreaker -->
-                            <div class="activity-item hidden" id="activity-icebreaker" style="display: none; text-align: center;">
-                                <span class="emoji" style="font-size: 4rem; display: block; margin-bottom: 1vh;">☕</span>
-                                <h3 style="font-size: 1.8rem; color: #555; margin-bottom: 1vh;">سؤال للقهوة</h3>
-                                <p style="font-size: 1.4rem; font-weight: bold; line-height: 1.6;">لو كان بإمكانك تعليم مادة مختلفة ليوم واحد، ماذا ستختار؟</p>
-                            </div>
-
-                            <!-- Activity 4: Tip -->
-                            <div class="activity-item hidden" id="activity-tip" style="display: none; text-align: center;">
-                                <span class="emoji" style="font-size: 4rem; display: block; margin-bottom: 1vh;">💡</span>
-                                <h3 style="font-size: 1.8rem; color: #4CAF50; margin-bottom: 1vh;">ومضة تربوية</h3>
-                                <p style="font-size: 1.4rem; line-height: 1.6;">قاعدة الـ 3 ثوانٍ: انتظر 3 ثوانٍ صامتاً بعد طرح السؤال على الفصل!</p>
-                            </div>
-
+                        <h2 class="widget-title" id="activity-widget-title" style="font-size: 1.5rem; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 1vh; margin-bottom: 1.5vh; flex-shrink: 0;">تجديد النشاط 🔄</h2>
+                        <div id="dynamic-activity-container" style="flex: 1; min-height: 0; overflow: hidden; border-radius: 1.5vh;">
+                            <!-- Rendered dynamically by screen.js -->
                         </div>
                     </div>
                 </div>

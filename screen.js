@@ -40,55 +40,114 @@ document.addEventListener('DOMContentLoaded', () => {
     updateDate();
     setInterval(updateDate, 60000);
 
-    // --- Dynamic Activities Management ---
-    const activities = ['activity-breathing', 'activity-stretch', 'activity-icebreaker', 'activity-tip'];
-    let currentActivityIndex = 0;
+    // --- 30 Dynamic Activities ---
+    const ACTIVITIES = [
+        // تمارين التنفس (3)
+        { type:'breathing', icon:'🌬️', title:'تنفس 4-7-8',        desc:'استنشق 4 ثوانٍ ← احتفظ بالهواء 7 ثوانٍ ← أزفر ببطء 8 ثوانٍ', bg:'#b2dfdb' },
+        { type:'breathing', icon:'🟦',  title:'التنفس المربع',      desc:'استنشق 4 ← احتفظ 4 ← أزفر 4 ← انتظر 4 ← كرر 4 مرات',         bg:'#b3e5fc' },
+        { type:'breathing', icon:'🌊',  title:'تنفس البطن',         desc:'ضع يدك على بطنك، استنشق حتى ترتفع يدك... ثم أزفر ببطء.',       bg:'#c8e6c9' },
+        // حركة وتمدد (6)
+        { type:'stretch',   icon:'🧘‍♀️', title:'تمدد الكتفين',      desc:'حرّك كتفيك دائرياً للخلف 5 مرات، ثم للأمام 5 مرات.',          bg:'#fff9c4' },
+        { type:'stretch',   icon:'🙆',  title:'تمدد الرقبة',        desc:'أمِل رأسك بلطف نحو الكتف الأيمن 15 ثانية، ثم الأيسر 15 ثانية.', bg:'#ffe0b2' },
+        { type:'stretch',   icon:'🙌',  title:'رفع الذراعين',       desc:'ارفع ذراعيك فوق رأسك وتمدد للأعلى بعمق... ثم للجانبين.',      bg:'#f3e5f5' },
+        { type:'stretch',   icon:'✋',  title:'تحريك المعصمين',     desc:'دوّر معصميك 10 مرات في كل اتجاه لتخفيف الإجهاد.',              bg:'#e0f7fa' },
+        { type:'stretch',   icon:'🚶',  title:'قف وتحرك!',          desc:'قم من كرسيك 30 ثانية — خطوات قليلة تُحسّن تركيزك بشكل واضح.',  bg:'#e8f5e9' },
+        { type:'stretch',   icon:'👁️', title:'استرخاء العينين',    desc:'انظر لشيء بعيد 20 ثانية. (قاعدة 20-20-20 لراحة العين)',         bg:'#fce4ec' },
+        // أسئلة كسر الجليد (7)
+        { type:'icebreaker', icon:'☕', title:'سؤال للقهوة',        desc:'لو كان بإمكانك تعليم مادة مختلفة ليوم واحد، ماذا ستختار؟',    bg:'#fff8e1' },
+        { type:'icebreaker', icon:'🤔', title:'سؤال للتأمل',        desc:'ما أغرب سؤال سألك إياه طالب وأربكك تماماً؟',                   bg:'#e8eaf6' },
+        { type:'icebreaker', icon:'🏆', title:'لحظة فخر',           desc:'ما هي اللحظة التي جعلتك أكثر فخراً بمهنتك هذا الأسبوع؟',      bg:'#fff3e0' },
+        { type:'icebreaker', icon:'⏪', title:'لو عدت بالزمن',      desc:'لو عدت لسنتك الأولى في التعليم، ما النصيحة التي ستعطيها لنفسك؟', bg:'#e0f2f1' },
+        { type:'icebreaker', icon:'📚', title:'كتاب غيّرك',          desc:'ما هو كتاب أو مقال غيّر طريقة تفكيرك في التعليم؟',             bg:'#f9fbe7' },
+        { type:'icebreaker', icon:'🎯', title:'هدف هذا العام',       desc:'ما الشيء الواحد الذي تتمنى أن يتذكره طلابك منك بعد 10 سنوات؟', bg:'#fbe9e7' },
+        { type:'icebreaker', icon:'🌟', title:'معلم أثّر فيك',       desc:'من هو المعلم الذي أثّر فيك أكثر في حياتك ولماذا؟',             bg:'#e3f2fd' },
+        // ومضات تربوية (7)
+        { type:'tip', icon:'💡', title:'قاعدة الـ 3 ثوانٍ',        desc:'انتظر 3 ثوانٍ صامتاً بعد طرح السؤال — يرفع مشاركة الطلاب بشكل ملحوظ.',  bg:'#f1f8e9' },
+        { type:'tip', icon:'🔄', title:'التعلم بالتعليم',           desc:'اطلب من طالب شرح مفهوم لزملائه — يتعلم المُعلِّم أكثر من المُتعلِّم.',   bg:'#e8f5e9' },
+        { type:'tip', icon:'⏱️', title:'قاعدة 10-2',               desc:'بعد كل 10 دقائق تعليم، أعطِ دقيقتين للمراجعة الذاتية — يُرسّخ الحفظ.', bg:'#e3f2fd' },
+        { type:'tip', icon:'❓', title:'الخطأ فرصة',               desc:'حين يخطئ طالب، اسأله: "لماذا اخترت هذه الإجابة؟" — يفتح تفكيراً عميقاً.', bg:'#fce4ec' },
+        { type:'tip', icon:'🎙️', title:'انهِ بسؤال مفتوح',        desc:'أنهِ كل حصة بسؤال يحفّز الطلاب على التفكير خارج الفصل.',                bg:'#ede7f6' },
+        { type:'tip', icon:'👤', title:'استخدم الأسماء',            desc:'ناد الطلاب بأسمائهم عند طرح الأسئلة — يرفع الانتباه ويُشعرهم بالتقدير.',  bg:'#fff8e1' },
+        { type:'tip', icon:'🎨', title:'التعلم البصري',             desc:'ارسم مخططاً أو خريطة ذهنية — يُساعد 65٪ من المتعلمين الذين يتعلمون بصرياً.', bg:'#e0f7fa' },
+        // ألغاز سريعة (4)
+        { type:'puzzle', icon:'🧩', title:'لغز سريع',              desc:'ما الشيء الذي كلما أخذت منه كَبُر؟ 🤔\n(الجواب: الحفرة)',            bg:'#fff9c4' },
+        { type:'puzzle', icon:'🔍', title:'لغز سريع',              desc:'عندي رأس بلا عينين وذيل بلا رجلين — ما أنا؟\n(الجواب: العملة المعدنية)', bg:'#e8eaf6' },
+        { type:'puzzle', icon:'🎭', title:'لغز سريع',              desc:'ما الذي يتكلم بلا فم ويسمع بلا أذن؟\n(الجواب: الصدى)',              bg:'#fce4ec' },
+        { type:'puzzle', icon:'🌀', title:'لغز سريع',              desc:'يُرى ولا يُمسك، ويتبعك أينما ذهبت — ما هو؟\n(الجواب: ظلّك)',        bg:'#e0f2f1' },
+        // لحظات إيجابية (3)
+        { type:'positive', icon:'💚', title:'لحظة امتنان',          desc:'فكّر في شخص أضاف قيمة لحياتك اليوم... وابتسم له في قلبك.',        bg:'#e8f5e9' },
+        { type:'positive', icon:'✨', title:'أنت تصنع فارقاً',      desc:'كل معلومة تقدّمها اليوم هي بذرة لنجاح طالب ربما لم يُولد بعد.',   bg:'#fff3e0' },
+        { type:'positive', icon:'🌅', title:'شكر الصباح',           desc:'فكّر في شيء واحد تشكر عليه هذا الصباح... دعه يملأ قلبك بالطاقة.', bg:'#e3f2fd' },
+    ];
 
-    function switchDynamicActivity() {
-        const currentId = activities[currentActivityIndex];
-        const nextActivityIndex = (currentActivityIndex + 1) % activities.length;
-        const nextId = activities[nextActivityIndex];
+    // Shuffle once at load so order is different each session
+    for (let i = ACTIVITIES.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [ACTIVITIES[i], ACTIVITIES[j]] = [ACTIVITIES[j], ACTIVITIES[i]];
+    }
 
-        // Hide current
-        const currEl = document.getElementById(currentId);
-        if(currEl) currEl.style.display = 'none';
+    let breathingPhaseInterval = null;
+    let currentActivityIdx = 0;
 
-        // Show next
-        const nextEl = document.getElementById(nextId);
-        if(nextEl) nextEl.style.display = 'block';
+    const ACTIVITY_TYPE_LABELS = {
+        breathing: 'تمرين التنفس 🌬️',
+        stretch:   'حركة ونشاط 🤸',
+        icebreaker:'سؤال اليوم ☕',
+        tip:       'ومضة تربوية 💡',
+        puzzle:    'لغز سريع 🧩',
+        positive:  'لحظة إيجابية 💚',
+    };
 
-        currentActivityIndex = nextActivityIndex;
+    function renderActivity(activity) {
+        const container = document.getElementById('dynamic-activity-container');
+        const titleEl = document.getElementById('activity-widget-title');
+        if (!container) return;
 
-        // Audio Logic
-        const breathAudio = document.getElementById('breath-audio');
-        if (breathAudio) {
-            if (nextId === 'activity-breathing' || nextId === 'activity-stretch') {
-                breathAudio.volume = 0.5;
-                breathAudio.play().catch(e => console.log('Audio auto-play prevented:', e));
-            } else {
-                breathAudio.pause();
-                breathAudio.currentTime = 0;
-            }
+        if (titleEl) titleEl.innerText = ACTIVITY_TYPE_LABELS[activity.type] || 'تجديد النشاط 🔄';
+
+        if (breathingPhaseInterval) { clearInterval(breathingPhaseInterval); breathingPhaseInterval = null; }
+
+        if (activity.type === 'breathing') {
+            container.innerHTML = `
+                <div style="width:100%;height:100%;border-radius:1.5vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2vh;
+                     background:url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=600') center/cover no-repeat;">
+                    <div style="width:15vh;height:15vh;border-radius:50%;background:rgba(255,255,255,0.3);backdrop-filter:blur(5px);
+                                display:flex;align-items:center;justify-content:center;animation:breathe 8s infinite ease-in-out;">
+                        <span id="breathe-text" style="font-size:1.5rem;color:white;font-weight:bold;text-align:center;padding:0 1vw;">تنفس...</span>
+                    </div>
+                    <div style="background:rgba(0,0,0,0.45);color:white;padding:1vh 2vw;border-radius:2vh;font-size:1.15rem;text-align:center;max-width:85%;line-height:1.6;">
+                        ${activity.desc}
+                    </div>
+                </div>`;
+            // Cycle breathing text phases
+            const phases = ['تنفس...', 'احتفظ به', 'زفير ببطء'];
+            let phase = 0;
+            breathingPhaseInterval = setInterval(() => {
+                phase = (phase + 1) % phases.length;
+                const el = document.getElementById('breathe-text');
+                if (el) el.innerText = phases[phase]; else clearInterval(breathingPhaseInterval);
+            }, 8000 / phases.length);
+        } else {
+            const descHtml = activity.desc.replace(/\n/g, '<br>');
+            container.innerHTML = `
+                <div style="width:100%;height:100%;border-radius:1.5vh;background:${activity.bg};
+                            display:flex;flex-direction:column;align-items:center;justify-content:center;
+                            gap:1.5vh;padding:2vh 2vw;box-sizing:border-box;text-align:center;">
+                    <span style="font-size:4rem;line-height:1;">${activity.icon}</span>
+                    <h3 style="font-size:1.8rem;color:var(--color-emerald-dark);margin:0;font-weight:800;">${activity.title}</h3>
+                    <p style="font-size:1.35rem;line-height:1.7;margin:0;color:var(--color-text-dark);">${descHtml}</p>
+                </div>`;
         }
     }
 
-    // Switch dynamic activity every 30 seconds
-    setInterval(switchDynamicActivity, 30000);
-
-    // Breathing Text Logic
-    const breatheText = document.getElementById('breathe-text');
-    if (breatheText) {
-        setInterval(() => {
-            if(breatheText.innerText === 'تنفس') {
-                breatheText.innerText = 'احتفظ به';
-                setTimeout(() => {
-                    breatheText.innerText = 'زفير ببطء';
-                }, 2000);
-            } else {
-                breatheText.innerText = 'تنفس';
-            }
-        }, 8000); // syncs with css animation 8s
+    function nextActivity() {
+        currentActivityIdx = (currentActivityIdx + 1) % ACTIVITIES.length;
+        renderActivity(ACTIVITIES[currentActivityIdx]);
     }
+
+    // Render first activity immediately, then rotate every 5 minutes
+    renderActivity(ACTIVITIES[0]);
+    setInterval(nextActivity, 5 * 60 * 1000);
 
     // --- Seamless infinite scroll for announcements ---
     // Clones all items so there's always content to scroll,
