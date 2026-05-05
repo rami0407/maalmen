@@ -90,25 +90,47 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 8000); // syncs with css animation 8s
     }
 
-    // --- Auto-scroll shoutout list ---
-    let autoScrollInterval = null;
+    // --- Auto-scroll shoutout list (continuous, no user interaction needed) ---
+    const shoutoutList = document.getElementById('shoutout-list');
 
-    function startAutoScroll(el) {
-        if (autoScrollInterval) clearInterval(autoScrollInterval);
-        autoScrollInterval = setInterval(() => {
-            if (!el) return;
-            const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 5;
-            if (atBottom) {
-                el.scrollTop = 0;
+    let scrollPos = 0;
+    let scrollPaused = false;
+    const SCROLL_SPEED = 0.6; // px per frame (~36px/sec at 60fps)
+    const PAUSE_AT_TOP_MS = 2000; // pause 2s after resetting to top
+
+    function autoScrollLoop() {
+        if (!shoutoutList) return;
+
+        const maxScroll = shoutoutList.scrollHeight - shoutoutList.clientHeight;
+
+        if (maxScroll <= 0) {
+            // Not enough content to scroll yet — check again next frame
+            requestAnimationFrame(autoScrollLoop);
+            return;
+        }
+
+        if (!scrollPaused) {
+            scrollPos += SCROLL_SPEED;
+
+            if (scrollPos >= maxScroll) {
+                // Reached the bottom — jump back to top and pause briefly
+                scrollPos = 0;
+                shoutoutList.scrollTop = 0;
+                scrollPaused = true;
+                setTimeout(() => {
+                    scrollPaused = false;
+                }, PAUSE_AT_TOP_MS);
             } else {
-                el.scrollTop += 1;
+                shoutoutList.scrollTop = scrollPos;
             }
-        }, 40);
+        }
+
+        requestAnimationFrame(autoScrollLoop);
     }
 
+    requestAnimationFrame(autoScrollLoop);
+
     // --- Firebase Real-time Listeners ---
-    const shoutoutList = document.getElementById('shoutout-list');
-    if (shoutoutList) startAutoScroll(shoutoutList);
 
     function renderShoutout(docId, data) {
         const div = document.createElement('div');
