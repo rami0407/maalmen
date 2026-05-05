@@ -46,6 +46,33 @@ body {
     text-align: center;
 }
 
+/* Quote widget — fixed height so it never competes with announcements */
+.quote-widget {
+    padding: 2vh 2vw;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    height: 26vh;
+    overflow: hidden;
+}
+
+.daily-quote {
+    font-size: 1.5rem;
+    line-height: 1.8;
+    margin: 0;
+    flex: 1;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    word-break: break-word;
+    white-space: normal;
+    display: block;
+}
+
+.daily-quote::-webkit-scrollbar {
+    display: none;
+}
+
 .greeting h1 {
     font-size: 2.5rem;
     color: var(--color-text-dark);
@@ -133,7 +160,13 @@ body {
     display: flex;
     flex-direction: column;
     gap: 1.5vh;
-    overflow-y: hidden; /* JS controls scrolling, no scrollbar needed */
+    overflow-y: scroll; /* must be scroll/auto for scrollTop to work */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE */
+}
+
+.shoutout-list::-webkit-scrollbar {
+    display: none; /* Chrome/Safari — hide bar but keep scrollability */
 }
 
 .shoutout-item {
