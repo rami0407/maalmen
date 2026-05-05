@@ -114,7 +114,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const div = document.createElement('div');
         div.className = 'shoutout-item';
         div.setAttribute('data-id', docId);
-        div.innerHTML = `<strong>إلى: ${data.receiver}</strong> <br> <span style="font-size:1.1rem; color:var(--color-text-dark);">${data.message}</span>`;
+        const sender = data.sender ? `<span style="font-size:0.85em;color:#888;display:block;margin-bottom:0.3em;">من: ${data.sender}</span>` : '';
+        div.innerHTML = `${sender}<strong style="display:block;margin-bottom:0.4em;">إلى: ${data.receiver}</strong><span style="display:block;color:var(--color-text-dark);">${data.message}</span>`;
         if (shoutoutList) {
             shoutoutList.appendChild(div);
         }
