@@ -90,37 +90,74 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 8000); // syncs with css animation 8s
     }
 
-    // --- Generic continuous auto-scroller (works for any element) ---
-    function createAutoScroller(el, speed, pauseMs) {
-        if (!el) return;
-        let pos = 0;
-        let paused = false;
+    // --- Seamless infinite scroll for announcements ---
+    // Clones all items so there's always content to scroll,
+    // even if only 1-2 announcements exist.
+    const shoutoutList = document.getElementById('shoutout-list');
 
-        function loop() {
-            const max = el.scrollHeight - el.clientHeight;
-            if (max > 0 && !paused) {
-                pos += speed;
-                if (pos >= max) {
-                    pos = 0;
-                    el.scrollTop = 0;
-                    paused = true;
-                    setTimeout(() => { paused = false; }, pauseMs);
-                } else {
-                    el.scrollTop = pos;
-                }
-            }
-            requestAnimationFrame(loop);
-        }
-        requestAnimationFrame(loop);
+    let isCloning = false;
+    let cloneTimer = null;
+    let scrollPos = 0;
+
+    function refreshClones() {
+        if (isCloning) return;
+        isCloning = true;
+        shoutoutList.querySelectorAll('.scroll-clone').forEach(c => c.remove());
+        const originals = Array.from(shoutoutList.querySelectorAll('.shoutout-item:not(.scroll-clone)'));
+        originals.forEach(item => {
+            const clone = item.cloneNode(true);
+            clone.classList.add('scroll-clone');
+            shoutoutList.appendChild(clone);
+        });
+        scrollPos = 0;
+        shoutoutList.scrollTop = 0;
+        isCloning = false;
     }
 
-    // Auto-scroll the announcements list (slow, looping)
-    const shoutoutList = document.getElementById('shoutout-list');
-    createAutoScroller(shoutoutList, 0.5, 2500);
+    // Re-clone whenever Firebase adds/removes real items
+    const listObserver = new MutationObserver(mutations => {
+        if (isCloning) return;
+        const realChange = mutations.some(m =>
+            [...m.addedNodes, ...m.removedNodes].some(n =>
+                n.nodeType === 1 && !n.classList.contains('scroll-clone')
+            )
+        );
+        if (realChange) {
+            clearTimeout(cloneTimer);
+            cloneTimer = setTimeout(refreshClones, 300);
+        }
+    });
+    if (shoutoutList) listObserver.observe(shoutoutList, { childList: true });
 
-    // Auto-scroll the quote if it's too long to fit (slower)
+    (function scrollLoop() {
+        requestAnimationFrame(scrollLoop);
+        if (!shoutoutList) return;
+
+        // Ensure clones exist before scrolling
+        if (shoutoutList.children.length > 0 && !shoutoutList.querySelector('.scroll-clone')) {
+            refreshClones();
+            return;
+        }
+
+        // Half of total scrollHeight = height of original items
+        const half = shoutoutList.scrollHeight / 2;
+        if (half <= 0) return;
+
+        scrollPos += 0.5;
+        if (scrollPos >= half) scrollPos -= half; // seamless loop
+        shoutoutList.scrollTop = scrollPos;
+    })();
+
+    // --- Simple scroller for quote (pause at top then restart) ---
     const quoteEl = document.getElementById('daily-quote');
-    createAutoScroller(quoteEl, 0.3, 3000);
+    (function quoteLoop() {
+        requestAnimationFrame(quoteLoop);
+        if (!quoteEl) return;
+        const max = quoteEl.scrollHeight - quoteEl.clientHeight;
+        if (max <= 0) return;
+        quoteEl.scrollTop += 0.3;
+        if (quoteEl.scrollTop >= max) quoteEl.scrollTop = 0;
+    })();
 
     // --- Firebase Real-time Listeners ---
 
