@@ -62,6 +62,52 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast('تمت المشاركة في منتدى الإبداع! 🎨');
     });
 
+    // --- Gratitude Form Logic ---
+    const gratitudeForm = document.getElementById('gratitude-form');
+    if (gratitudeForm) {
+        gratitudeForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const receiver = document.getElementById('gratitude-receiver').value.trim();
+            const message = document.getElementById('gratitude-message').value.trim();
+
+            if (!receiver || !message) return;
+
+            const data = {
+                type: 'gratitude',
+                sender: currentUser.name,
+                receiver: receiver,
+                message: message,
+                timestamp: new Date().getTime(),
+            };
+
+            const btn = gratitudeForm.querySelector('button');
+            const originalText = btn.innerText;
+
+            try {
+                if (window.db && window.interactionsRef) {
+                    btn.innerText = 'جاري الإرسال...';
+                    btn.disabled = true;
+                    window.interactionsRef.add(data)
+                        .then(() => {
+                            gratitudeForm.reset();
+                            btn.innerText = 'تم الإرسال! 💚';
+                            setTimeout(() => { btn.innerText = originalText; btn.disabled = false; }, 3000);
+                        })
+                        .catch(() => {
+                            btn.innerText = originalText;
+                            btn.disabled = false;
+                            showToast('حدث خطأ، حاول مرة أخرى.');
+                        });
+                } else {
+                    showToast('قاعدة البيانات غير متصلة.');
+                }
+            } catch (e) {
+                showToast('قاعدة البيانات غير متصلة.');
+            }
+        });
+    }
+
     // --- Smart Notifications (Real Schedule System) ---
     const schedule = [
         { name: "افتتاحية اليوم", start: "08:00", end: "08:10", type: "opening" },

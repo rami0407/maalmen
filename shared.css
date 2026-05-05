@@ -13,6 +13,10 @@
   --color-blue: #4682B4; /* أزرق هادئ */
   --color-blue-light: #87CEEB;
   
+  /* Aliases for backward compatibility */
+  --color-primary: #2E8B57;
+  --gradient-primary: linear-gradient(135deg, #2E8B57, #3CB371);
+
   --color-background: #F8F9FA;
   --color-surface: #FFFFFF;
   --color-text-dark: #2C3E50;

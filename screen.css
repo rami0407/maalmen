@@ -39,6 +39,13 @@ body {
     font-size: 2rem;
 }
 
+.date {
+    font-size: 1.1rem;
+    line-height: 1.4;
+    color: var(--color-emerald-dark);
+    text-align: center;
+}
+
 .greeting h1 {
     font-size: 2.5rem;
     color: var(--color-text-dark);
@@ -126,8 +133,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    /* Basic scroll animation, can be improved with JS for seamless scrolling */
-    animation: scrollUp 20s linear infinite;
+    overflow-y: auto;
+    scroll-behavior: smooth;
 }
 
 .shoutout-item {
@@ -199,7 +206,7 @@ body {
     text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 
-@keyframes breatheAnim {
+@keyframes breathe {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.5); }
 }

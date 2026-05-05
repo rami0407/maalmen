@@ -26,6 +26,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Logout
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            sessionStorage.removeItem('maalmen_admin_auth');
+            loginOverlay.style.display = 'flex';
+            dashboardContent.style.display = 'none';
+        });
+    }
+
     // --- Dashboard Logic ---
     const syncStatus = document.getElementById('sync-status');
     const contentForm = document.getElementById('daily-content-form');

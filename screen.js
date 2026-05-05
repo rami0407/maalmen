@@ -1,21 +1,44 @@
 // js/screen.js
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- Clock ---
+    // --- Clock & Date ---
+    const hijriFormatter = new Intl.DateTimeFormat('ar-SA-u-ca-islamic', {
+        day: 'numeric', month: 'long', year: 'numeric'
+    });
+    const gregorianFormatter = new Intl.DateTimeFormat('ar-SA', {
+        weekday: 'long', day: 'numeric', month: 'long'
+    });
+
     function updateClock() {
         const now = new Date();
         let hours = now.getHours();
         let minutes = now.getMinutes();
         const ampm = hours >= 12 ? 'م' : 'ص';
-        
+
         hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
+        hours = hours ? hours : 12;
         minutes = minutes < 10 ? '0' + minutes : minutes;
-        
+
         document.getElementById('current-time').innerText = `${hours}:${minutes} ${ampm}`;
     }
+
+    function updateDate() {
+        const now = new Date();
+        const dateEl = document.getElementById('current-date');
+        if (!dateEl) return;
+        try {
+            const gregorian = gregorianFormatter.format(now);
+            const hijri = hijriFormatter.format(now);
+            dateEl.innerHTML = `${gregorian}<br><span style="font-size:0.8em;opacity:0.8;">${hijri}</span>`;
+        } catch(e) {
+            dateEl.innerText = now.toLocaleDateString('ar-SA');
+        }
+    }
+
     setInterval(updateClock, 1000);
     updateClock();
+    updateDate();
+    setInterval(updateDate, 60000);
 
     // --- Dynamic Activities Management ---
     const activities = ['activity-breathing', 'activity-stretch', 'activity-icebreaker', 'activity-tip'];
@@ -67,8 +90,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 8000); // syncs with css animation 8s
     }
 
+    // --- Auto-scroll shoutout list ---
+    let autoScrollInterval = null;
+
+    function startAutoScroll(el) {
+        if (autoScrollInterval) clearInterval(autoScrollInterval);
+        autoScrollInterval = setInterval(() => {
+            if (!el) return;
+            const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 5;
+            if (atBottom) {
+                el.scrollTop = 0;
+            } else {
+                el.scrollTop += 1;
+            }
+        }, 40);
+    }
+
     // --- Firebase Real-time Listeners ---
     const shoutoutList = document.getElementById('shoutout-list');
+    if (shoutoutList) startAutoScroll(shoutoutList);
 
     function renderShoutout(docId, data) {
         const div = document.createElement('div');

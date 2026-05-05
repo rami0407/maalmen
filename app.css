@@ -157,6 +157,27 @@ select:focus, textarea:focus {
     box-shadow: 0 4px 15px rgba(70, 130, 180, 0.3);
 }
 
+/* Gratitude Card */
+.gratitude-card input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.gratitude-card input[type="text"]:focus {
+    outline: none;
+    border-color: var(--color-emerald);
+}
+
+.btn-gratitude {
+    background: linear-gradient(135deg, #f12711, #f5af19);
+    box-shadow: 0 4px 15px rgba(241, 39, 17, 0.25);
+}
+
 /* File Upload */
 .upload-label {
     display: flex;
